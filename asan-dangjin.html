@@ -80,4 +80,46 @@ figcaption .cap{display:inline-block;font-size:15px;color:var(--sub);margin-top:
 <p>봄 바다(제부도), 가을 한옥(안동)에 이어 늦가을 단풍(아산·당진)까지. 세 번의 여행 모두 날씨는 우리 편이었고, 셀카 팔 길이는 회차를 거듭할수록 늘어났음.</p>
 <p>다음 호외는 겨울판이 될지, 벚꽃판이 될지. 확실한 건 하나 — 이 4인 취재단은 반드시 다시 출동함.</p></div>
 <div class="foot"><a href="index.html">← 다른 여행기 보러 가기</a><br>ⓒ 처남네 여행기 편집국</div>
-</div></body></html>
+</div><!-- photo-viewer:start -->
+<style>
+img.pv-z{cursor:zoom-in;-webkit-tap-highlight-color:transparent}
+#pv{position:fixed;inset:0;z-index:99999;background:#000;display:none;flex-direction:column;color:#fff;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+#pv.on{display:flex}
+#pv .pv-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;gap:8px}
+#pv .pv-n{font-size:17px;font-weight:700;opacity:.9}
+#pv button,#pv a.pv-o{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;min-width:48px;min-height:48px;font-size:22px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;padding:0 14px}
+#pv a.pv-o{font-size:16px}
+#pv .pv-stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;touch-action:pinch-zoom}
+#pv .pv-stage img{max-width:100%;max-height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
+#pv .pv-prev,#pv .pv-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45)!important;font-size:28px!important}
+#pv .pv-prev{left:8px}#pv .pv-next{right:8px}
+#pv .pv-cap{padding:12px 16px 18px;font-size:19px;line-height:1.6;text-align:center;max-height:28vh;overflow:auto;word-break:keep-all}
+</style>
+<div id="pv" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+ <div class="pv-top"><span class="pv-n"></span><span><a class="pv-o" target="_blank" rel="noopener">원본 열기</a> <button class="pv-x" aria-label="닫기">✕</button></span></div>
+ <div class="pv-stage"><button class="pv-prev" aria-label="이전 사진">‹</button><img alt=""><button class="pv-next" aria-label="다음 사진">›</button></div>
+ <div class="pv-cap"></div>
+</div>
+<script>
+(function(){
+ var pv=document.getElementById('pv'),im=pv.querySelector('.pv-stage img'),cap=pv.querySelector('.pv-cap'),num=pv.querySelector('.pv-n'),orig=pv.querySelector('.pv-o');
+ var list=[].slice.call(document.querySelectorAll('img')).filter(function(i){return !pv.contains(i)&&!i.closest('#lb')&&i.getAttribute('src')});
+ var cur=0,opened=false;
+ function capOf(i){var f=i.closest('figure');var c=f&&f.querySelector('figcaption');return c?c.innerText.trim():(i.alt||'')}
+ function show(k){cur=(k+list.length)%list.length;var i=list[cur];im.src=i.currentSrc||i.src;orig.href=i.currentSrc||i.src;cap.textContent=capOf(i);num.textContent=(cur+1)+' / '+list.length}
+ function open(k){show(k);pv.classList.add('on');document.documentElement.style.overflow='hidden';if(!opened){opened=true;try{history.pushState({pv:1},'')}catch(e){}}}
+ function close(fromPop){pv.classList.remove('on');document.documentElement.style.overflow='';if(opened){opened=false;if(!fromPop){try{history.back()}catch(e){}}}}
+ list.forEach(function(i,k){i.classList.add('pv-z');i.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();open(k)},true)});
+ pv.querySelector('.pv-x').onclick=function(){close()};
+ pv.querySelector('.pv-prev').onclick=function(e){e.stopPropagation();show(cur-1)};
+ pv.querySelector('.pv-next').onclick=function(e){e.stopPropagation();show(cur+1)};
+ pv.querySelector('.pv-stage').addEventListener('click',function(e){if(e.target===this)close()});
+ window.addEventListener('popstate',function(){if(pv.classList.contains('on'))close(true)});
+ document.addEventListener('keydown',function(e){if(!pv.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1)});
+ var sx=0,sy=0,mt=false;
+ im.addEventListener('touchstart',function(e){mt=e.touches.length>1;sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ im.addEventListener('touchend',function(e){if(mt||(window.visualViewport&&visualViewport.scale>1.05))return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1))},{passive:true});
+})();
+</script>
+<!-- photo-viewer:end -->
+</body></html>
