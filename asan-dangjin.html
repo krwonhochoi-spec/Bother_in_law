@@ -40,7 +40,7 @@ figcaption .cap{display:inline-block;font-size:15px;color:var(--sub);margin-top:
 .foot a{color:var(--ink);font-weight:700}
 @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}.grid figure.wide{grid-column:1/-1}.wrap{padding:0 32px 48px}}
 </style></head><body><div class="wrap">
-<div class="topbar"><a href="index.html">← 여행기 목록</a><span>처남네 여행기 · 시즌 3</span></div>
+<div class="topbar"><a href="index.html?v=1109">← 여행기 목록</a><span>처남네 여행기 · 시즌 3</span></div>
 <header class="mast"><div class="kicker">號 外 · 특 별 판</div><h1>충청 단풍일보</h1>
 <div class="meta"><span>2026년 11월 8일 (일)</span><span>아산 · 당진 당일치기</span><span>발행인: 4인 취재단</span></div></header>
 <div class="lead"><p class="big">"늦가을 충청도, 4인 취재단에 의해 완전 정복"</p>
@@ -79,7 +79,7 @@ figcaption .cap{display:inline-block;font-size:15px;color:var(--sub);margin-top:
 <div class="editorial"><div class="tag">사 설</div><h2>시즌 3 종영, 시즌 4 촬영지 공모 중</h2>
 <p>봄 바다(제부도), 가을 한옥(안동)에 이어 늦가을 단풍(아산·당진)까지. 세 번의 여행 모두 날씨는 우리 편이었고, 셀카 팔 길이는 회차를 거듭할수록 늘어났음.</p>
 <p>다음 호외는 겨울판이 될지, 벚꽃판이 될지. 확실한 건 하나 — 이 4인 취재단은 반드시 다시 출동함.</p></div>
-<div class="foot"><a href="index.html">← 다른 여행기 보러 가기</a><br>ⓒ 처남네 여행기 편집국</div>
+<div class="foot"><a href="index.html?v=1109">← 다른 여행기 보러 가기</a><br>ⓒ 처남네 여행기 편집국</div>
 </div><!-- photo-viewer:start -->
 <style>
 img.pv-z{cursor:zoom-in;-webkit-tap-highlight-color:transparent}
@@ -109,7 +109,13 @@ img.pv-z{cursor:zoom-in;-webkit-tap-highlight-color:transparent}
  function show(k){cur=(k+list.length)%list.length;var i=list[cur];im.src=i.currentSrc||i.src;orig.href=i.currentSrc||i.src;cap.textContent=capOf(i);num.textContent=(cur+1)+' / '+list.length}
  function open(k){show(k);pv.classList.add('on');document.documentElement.style.overflow='hidden';if(!opened){opened=true;try{history.pushState({pv:1},'')}catch(e){}}}
  function close(fromPop){pv.classList.remove('on');document.documentElement.style.overflow='';if(opened){opened=false;if(!fromPop){try{history.back()}catch(e){}}}}
- list.forEach(function(i,k){i.classList.add('pv-z');i.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();open(k)},true)});
+ list.forEach(function(i){i.classList.add('pv-z')});
+ document.addEventListener('click',function(e){
+  if(pv.contains(e.target))return;
+  var t=e.target,img=null;
+  if(t.tagName==='IMG')img=t;else{var box=t.closest&&t.closest('figure,.ph,.frame,.shot,.photo,.card');if(box&&!box.closest('a[href]'))img=box.querySelector('img')}
+  var k=img?list.indexOf(img):-1;if(k<0)return;
+  e.preventDefault();e.stopPropagation();open(k)},true);
  pv.querySelector('.pv-x').onclick=function(){close()};
  pv.querySelector('.pv-prev').onclick=function(e){e.stopPropagation();show(cur-1)};
  pv.querySelector('.pv-next').onclick=function(e){e.stopPropagation();show(cur+1)};
@@ -121,5 +127,6 @@ img.pv-z{cursor:zoom-in;-webkit-tap-highlight-color:transparent}
  im.addEventListener('touchend',function(e){if(mt||(window.visualViewport&&visualViewport.scale>1.05))return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1))},{passive:true});
 })();
 </script>
+<div id="pv-hint" style="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9999;background:rgba(0,0,0,.78);color:#fff;font:700 17px 'Noto Sans KR',sans-serif;padding:10px 18px;border-radius:999px;pointer-events:none;transition:opacity .6s">🔍 사진을 누르면 크게 볼 수 있어요</div><script>setTimeout(function(){var h=document.getElementById("pv-hint");if(h){h.style.opacity=0;setTimeout(function(){h.remove()},700)}},4000)</script>
 <!-- photo-viewer:end -->
 </body></html>
